@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haii Sayang!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://kit.fontawesome.com/4f3ce16e3e.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --primary: #ff85a2;
+      --secondary: #ffc2d1;
+      --accent: #ff499e;
+      --light: #fff8fa;
+      --dark: #472836;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, var(--secondary), var(--light), #f0e6ff, #ffd6e6);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      color: var(--dark);
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 90%;
+    }
+    
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+    }
+    
+    #startButton {
+      background: none;
+      border: none;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      margin-top: 20px;
+    }
+    
+    #startButton .button-content {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-size: 1.8rem;
+      padding: 18px 40px;
+      border-radius: 50px;
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #startButton .button-content:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: 0.5s;
+    }
+    
+    #startButton:hover .button-content:before {
+      left: 100%;
+    }
+    
+    #startButton:hover {
+      transform: translateY(-5px);
+    }
+    
+    #startButton:active {
+      transform: translateY(0);
+    }
+    
+    .emoji-drop {
+      position: absolute;
+      top: -50px;
+      font-size: 30px;
+      animation: fall linear infinite;
+      z-index: 1;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.1));
+      user-select: none;
+    }
+    
+    @keyframes fall {
+      to {
+        transform: translateY(120vh) rotate(calc(var(--rotate) * 1deg));
+        opacity: 0;
+      }
+    }
+    
+    .floating-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      opacity: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff85a2'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    
+    /* Loader animation */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    .loader-heart {
+      position: relative;
+      width: 100px;
+      height: 90px;
+      animation: heartbeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    
+    .loader-heart:before,
+    .loader-heart:after {
+      position: absolute;
+      content: "";
+      left: 50px;
+      top: 0;
+      width: 50px;
+      height: 80px;
+      background: var(--primary);
+      border-radius: 50px 50px 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+    
+    .loader-heart:after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+    
+    @keyframes heartbeat {
+      0% { transform: scale(0.8); }
+      14% { transform: scale(1); }
+      28% { transform: scale(0.8); }
+      42% { transform: scale(1); }
+      70% { transform: scale(0.8); }
+      100% { transform: scale(0.8); }
+    }
+    
+    .loader p {
+      margin-top: 20px;
+      font-size: 18px;
+      color: var(--primary);
+    }
+    
+    /* Custom Swal styling */
+    .custom-swal-popup {
+      border-radius: 20px !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    .custom-swal-title {
+      color: var(--accent) !important;
+      font-family: 'Dancing Script', cursive !important;
+      font-size: 2.2rem !important;
+    }
+    
+    .custom-swal-content {
+      font-family: 'Poppins', sans-serif !important;
+      color: var(--dark) !important;
+    }
+    
+    .custom-swal-confirm {
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      border-radius: 50px !important;
+      padding: 12px 30px !important;
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 500 !important;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4) !important;
+    }
+    
+    .custom-swal-cancel {
+      background: linear-gradient(135deg, #e0e0e0, #c0c0c0) !important;
+      border-radius: 50px !important;
+      padding: 12px 30px !important;
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 500 !important;
+      color: #555 !important;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .pulse-animation {
+      animation: pulse-glow 2s infinite;
+    }
+    
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 0 0 rgba(255, 73, 158, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 73, 158, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 73, 158, 0); }
+    }
+    
+    /* Music control */
+    .music-control {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+      z-index: 100;
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    
+    .music-control:hover {
+      transform: scale(1.1);
+    }
+    
+    .music-control i {
+      color: white;
+      font-size: 20px;
+    }
+    
+    /* Confetti effect */
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 30px;
+      background: #ffd300;
+      top: 0;
+      opacity: 0;
+    }
+    
+    .confetti-piece:nth-child(1) {
+      left: 7%;
+      transform: rotate(-40deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 182ms;
+      animation-duration: 1116ms;
+    }
+    
+    .confetti-piece:nth-child(2) {
+      left: 14%;
+      transform: rotate(4deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 161ms;
+      animation-duration: 1076ms;
+      background: #ff3d00;
+    }
+    
+    .confetti-piece:nth-child(3) {
+      left: 21%;
+      transform: rotate(-51deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 481ms;
+      animation-duration: 1103ms;
+      background: #ff9100;
+    }
+    
+    .confetti-piece:nth-child(4) {
+      left: 28%;
+      transform: rotate(61deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 334ms;
+      animation-duration: 943ms;
+      background: #18dcff;
+    }
+    
+    .confetti-piece:nth-child(5) {
+      left: 35%;
+      transform: rotate(-52deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 302ms;
+      animation-duration: 1105ms;
+      background: #7d00ff;
+    }
+    
+    .confetti-piece:nth-child(6) {
+      left: 42%;
+      transform: rotate(38deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 180ms;
+      animation-duration: 1095ms;
+      background: #ff0051;
+    }
+    
+    .confetti-piece:nth-child(7) {
+      left: 49%;
+      transform: rotate(11deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 395ms;
+      animation-duration: 1094ms;
+      background: #00e676;
+    }
+    
+    .confetti-piece:nth-child(8) {
+      left: 56%;
+      transform: rotate(49deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 14ms;
+      animation-duration: 887ms;
+      background: #ff3d00;
+    }
+    
+    .confetti-piece:nth-child(9) {
+      left: 63%;
+      transform: rotate(-72deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 149ms;
+      animation-duration: 805ms;
+      background: #7d00ff;
+    }
+    
+    .confetti-piece:nth-child(10) {
+      left: 70%;
+      transform: rotate(10deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 351ms;
+      animation-duration: 1059ms;
+      background: #ff0051;
+    }
+    
+    .confetti-piece:nth-child(11) {
+      left: 77%;
+      transform: rotate(4deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 307ms;
+      animation-duration: 1132ms;
+      background: #00e676;
+    }
+    
+    .confetti-piece:nth-child(12) {
+      left: 84%;
+      transform: rotate(42deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 464ms;
+      animation-duration: 776ms;
+      background: #18dcff;
+    }
+    
+    .confetti-piece:nth-child(13) {
+      left: 91%;
+      transform: rotate(-72deg);
+      animation: makeItRain 1000ms infinite ease-out;
+      animation-delay: 429ms;
+      animation-duration: 818ms;
+      background: #ff9100;
+    }
+    
+    .confetti-piece:nth-child(odd) {
+      background: #7431e8;
+    }
+    
+    .confetti-piece:nth-child(even) {
+      z-index: 1;
+    }
+    
+    .confetti-piece:nth-child(4n) {
+      width: 5px;
+      height: 12px;
+      animation-duration: 2000ms;
+    }
+    
+    .confetti-piece:nth-child(3n) {
+      width: 3px;
+      height: 10px;
+      animation-duration: 2500ms;
+      animation-delay: 1000ms;
+    }
+    
+    .confetti-piece:nth-child(4n-7) {
+      background: #ff3d00;
+    }
+    
+    @keyframes makeItRain {
+      from {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.8rem;
+      }
+      
+      #startButton .button-content {
+        font-size: 1.5rem;
+        padding: 15px 30px;
+      }
+      
+      .music-control {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader" id="pageLoader">
+    <div class="loader-heart"></div>
+    <p>Loading...</p>
+  </div>
+  
+  <!-- Confetti Container -->
+  <div class="confetti-container" style="display: none;">
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+    <div class="confetti-piece"></div>
+  </div>
+  
+  <!-- Floating Hearts Container -->
+  <div class="floating-hearts" id="heartsContainer"></div>
+  
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Haiii Sayang!</h1>
+    <button id="startButton">
+      <div class="button-content">
+        <span>Klik Aku!</span>
+        <i class="fas fa-heart"></i>
+      </div>
+    </button>
+  </div>
+  
+  <!-- Music Control -->
+  <div class="music-control" id="musicControl">
+    <i class="fas fa-volume-up" id="musicIcon"></i>
+  </div>
+  
+  <!-- Audio -->
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/01/20/audio_172d7dec90.mp3?filename=soft-sweet-romantic-background-music-6448.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="clickSound">
+    <source src="https://www.myinstants.com/media/sounds/pop-up-off.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="successSound">
+    <source src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Wait for page to load
+    window.addEventListener('load', function() {
+      // Hide loader after 1.5 seconds
+      setTimeout(() => {
+        document.getElementById('pageLoader').style.display = 'none';
+        // Show music control
+        gsap.to('#musicControl', {opacity: 1, duration: 0.5, delay: 0.5});
+      }, 1500);
+    });
+    
+    // DOM elements
+    const startBtn = document.getElementById('startButton');
+    const bgMusic = document.getElementById('bgMusic');
+    const clickSound = document.getElementById('clickSound');
+    const successSound = document.getElementById('successSound');
+    const musicControl = document.getElementById('musicControl');
+    const musicIcon = document.getElementById('musicIcon');
+    const heartsContainer = document.getElementById('heartsContainer');
+    
+    // Music control
+    let isMusicPlaying = false;
+    
+    musicControl.addEventListener('click', () => {
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        musicIcon.classList.remove('fa-volume-up');
+        musicIcon.classList.add('fa-volume-mute');
+      } else {
+        bgMusic.play();
+        musicIcon.classList.remove('fa-volume-mute');
+        musicIcon.classList.add('fa-volume-up');
+      }
+      isMusicPlaying = !isMusicPlaying;
+    });
+    
+    // Customize SweetAlert
+    const customSwal = Swal.mixin({
+      customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        content: 'custom-swal-content',
+        confirmButton: 'custom-swal-confirm',
+        cancelButton: 'custom-swal-cancel'
+      },
+      buttonsStyling: false,
+      showClass: {
+        popup: 'animate__animated animate__fadeIn animate__faster'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOut animate__faster'
+      }
+    });
+    
+    // Emoji berjatuhan
+    function spawnEmoji() {
+      const emojiList = ['🥺', '✨', '❤️', '🐣', '🧸', '🌸', '🌈', '🍓', '🍨', '🎀', '🦄', '🌷'];
+      const emoji = document.createElement('div');
+      emoji.classList.add('emoji-drop');
+      emoji.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      emoji.style.setProperty('--rotate', Math.random() * 360 - 180);
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 5000);
+    }
+    
+    // Spawn emojis at interval
+    setInterval(spawnEmoji, 400);
+    
+    // Floating hearts animation
+    function createFloatingHearts() {
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.top = `${Math.random() * 100}%`;
+        heartsContainer.appendChild(heart);
+        
+        // Animate each heart
+        gsap.to(heart, {
+          opacity: Math.random() * 0.6 + 0.1,
+          duration: Math.random() * 1 + 0.5,
+          delay: Math.random() * 3
+        });
+        
+        gsap.to(heart, {
+          y: -100 - Math.random() * 150,
+          x: Math.random() * 50 - 25,
+          duration: Math.random() * 10 + 10,
+          delay: Math.random() * 3,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+        
+        gsap.to(heart, {
+          rotate: Math.random() * 360,
+          duration: Math.random() * 20 + 20,
+          repeat: -1,
+          ease: "none"
+        });
+        
+        gsap.to(heart, {
+          scale: Math.random() * 0.5 + 0.5,
+          duration: Math.random() * 2 + 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      }
+    }
+    
+    // Create floating hearts
+    createFloatingHearts();
+    
+    // Sound effects
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+    
+    function playSuccessSound() {
+      successSound.currentTime = 0;
+      successSound.play();
+    }
+    
+    // Show confetti
+    function showConfetti() {
+      document.querySelector('.confetti-container').style.display = 'block';
+      setTimeout(() => {
+        document.querySelector('.confetti-container').style.display = 'none';
+      }, 3000);
+    }
+    
+    // Main interaction flow
+    startBtn.addEventListener('click', async () => {
+      playClickSound();
+      
+      // Start background music if not already playing
+      if (!isMusicPlaying) {
+        bgMusic.volume = 0.4;
+        bgMusic.play();
+        isMusicPlaying = true;
+        musicIcon.classList.remove('fa-volume-mute');
+        musicIcon.classList.add('fa-volume-up');
+      }
+      
+      // Animate button press
+      gsap.to(startBtn, {scale: 0.9, duration: 0.1, yoyo: true, repeat: 1});
+      
+      // Hide the start button with animation
+      gsap.to(startBtn, {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.5,
+        onComplete: () => {
+          startBtn.style.display = 'none';
+        }
+      });
+      
+      // Ask for name
+      const { value: nama } = await customSwal.fire({
+        title: 'Hai Cantik!',
+        text: 'Masukin nama kamu dong!',
+        input: 'text',
+        inputPlaceholder: 'Namamu siapa?',
+        confirmButtonText: 'Lanjut',
+        allowOutsideClick: false,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdrop: `
+          rgba(255, 192, 203, 0.4)
+          url("https://feeldreams.github.io/pandakuning.gif")
+          bottom
+          no-repeat
+        `
+      });
+      
+      if (!nama) {
+        // Show the start button again if canceled
+        gsap.to(startBtn, {
+          display: 'block',
+          opacity: 1,
+          scale: 1,
+          duration: 0.5
+        });
+        return;
+      }
+      
+      playClickSound();
+      await customSwal.fire({
+        title: `Haloo ${nama}!! 🐣🧁`,
+        text: 'Senang banget bisa ngobrol sama kamu hari ini!',
+        confirmButtonText: 'Hai juga!',
+        imageUrl: 'https://feeldreams.github.io/pandakuning.gif',
+        imageWidth: 150,
+        imageHeight: 150
+      });
+      
+      // Pertanyaan lucu tentang makanan favorit
+      playClickSound();
+      const { value: makananFavorit } = await customSwal.fire({
+        title: 'Mau tanya dong!',
+        text: 'Apa makanan favorit kamu?',
+        input: 'text',
+        inputPlaceholder: 'Mie ayam, sate, bakso...',
+        confirmButtonText: 'Lanjut',
+        allowOutsideClick: false
+      });
+      
+      if (makananFavorit) {
+        playClickSound();
+        await customSwal.fire({
+          title: 'Wah enak banget!',
+          html: `Aku juga suka ${makananFavorit}!<br>Kapan-kapan kita makan ${makananFavorit} bareng yaa!`,
+          imageUrl: 'https://media.tenor.com/2WesfzOdv1MAAAAi/bear-kiss-bear-love.gif',
+          imageWidth: 120,
+          imageHeight: 120
+        });
+      }
+      
+      // Pertanyaan tentang hobi
+      playClickSound();
+      const { value: hobi } = await customSwal.fire({
+        title: 'Kalau lagi gabut,',
+        text: 'kamu biasanya ngapain?',
+        input: 'text',
+        inputPlaceholder: 'Nonton drakor, dengerin musik...',
+        confirmButtonText: 'Lanjut',
+        allowOutsideClick: false
+      });
+      
+      if (hobi) {
+        playClickSound();
+        await customSwal.fire({
+          title: 'Seru banget!',
+          html: `${hobi} emang asik sih!<br>Aku juga suka ${hobi} tapi mungkin ga sebagus kamu 😄`,
+          imageUrl: 'https://media.tenor.com/8tLf5ZkC9s0AAAAi/hamster-hamster-kiss.gif',
+          imageWidth: 120,
+          imageHeight: 120
+        });
+      }
+      
+      // Ask about day
+      playClickSound();
+      const { isConfirmed: isTired } = await customSwal.fire({
+        title: 'Gimana nih hari ini?',
+        text: 'Cape ga? Atau ada yang bikin seneng? 🥺',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Cape banget',
+        cancelButtonText: 'Lagi happy!',
+        allowOutsideClick: false
+      });
+      
+      // Response based on feeling
+      playClickSound();
+      if (isTired) {
+        await customSwal.fire({
+          title: 'Waduh, pasti harinya berat yaa',
+          text: 'Coba ceritain, aku mau denger kok. Siapa tau aku bisa bantu',
+          imageUrl: 'https://feeldreams.github.io/peach6.gif',
+          imageWidth: 120,
+          imageHeight: 120
+        });
+      } else {
+        playSuccessSound();
+        showConfetti();
+        await customSwal.fire({
+          title: 'Wahhh hebatt~',
+          text: 'Pasti ada hal seru yang terjadi yaa! Cerita dong!',
+          icon: 'success',
+          imageUrl: 'https://media.tenor.com/1fVbBfLqPfwAAAAi/hamster-happy.gif',
+          imageWidth: 120,
+          imageHeight: 120
+        });
+      }
+      
+      // Get story
+      let cerita = '';
+      while (!cerita) {
+        const input = await customSwal.fire({
+          title: 'Ceritain dong di sini',
+          input: 'textarea',
+          inputPlaceholder: 'Tulis ceritamu di sini ya...',
+          confirmButtonText: 'Lanjutkan Cerita',
+          allowOutsideClick: false,
+          inputAttributes: {
+            style: 'min-height: 100px; border-radius: 12px; padding: 12px; border: 2px solid #ffc2d1;'
+          }
+        });
+        
+        cerita = input.value?.trim();
+        if (!cerita) {
+          await customSwal.fire({
+            title: 'Eits!',
+            text: 'Ceritanya belum diisi tuh~ Jangan malu-malu!',
+            icon: 'warning'
+          });
+        }
+      }
+      
+      // Positive reinforcement
+      playSuccessSound();
+      showConfetti();
+      await customSwal.fire({
+        title: 'Kamu hebat banget!',
+        html: `Apapun yang kamu hadapi hari ini, kamu sudah melaluinya dengan baik.<br><br>
+               <img src="https://feeldreams.github.io/bunga.gif" width="150"><br>
+               Terus semangat ya!`,
+        confirmButtonText: 'Makasih!'
+      });
+      
+      // Pertanyaan menggemaskan
+      playClickSound();
+      const { value: halLucu } = await customSwal.fire({
+        title: 'Ngomong-ngomong...',
+        text: 'Apa hal paling lucu yang terjadi hari ini?',
+        input: 'text',
+        inputPlaceholder: 'Cerita dong...',
+        confirmButtonText: 'Lanjut',
+        allowOutsideClick: false
+      });
+      
+      if (halLucu) {
+        playSuccessSound();
+        await customSwal.fire({
+          title: 'Wkwkwk lucu banget!',
+          html: `Denger ceritamu aja aku jadi senyam-senyum sendiri 😄<br>
+                 <img src="https://media.tenor.com/2WesfzOdv1MAAAAi/bear-kiss-bear-love.gif" width="120">`,
+          confirmButtonText: 'Iya kan!'
+        });
+      }
+      
+      // Puisi
+      await customSwal.fire({
+        title: 'Untukmu~',
+        html: `
+          <div style="font-family: 'Dancing Script', cursive; font-size: 1.3rem; line-height: 1.8; margin: 20px 0; color: #8f4068;">
+            <p>Di antara keramaian dunia,<br>
+            ada senyummu yang selalu bikin hari cerah,<br>
+            ada tawamu yang bikin semangat kembali.</p>
+            <p>Teruslah jadi dirimu yang cantik,<br>
+            yang kuat, dan yang selalu bersinar<br>
+            seperti bintang di langit malam.</p>
+          </div>
+          <img src="https://feeldreams.github.io/pandakuning.gif" width="100">
+        `,
+        confirmButtonText: 'Aww 💕',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 242, 245, 0.9))'
+      });
+      
+      // Final message
+      playSuccessSound();
+      showConfetti();
+      await customSwal.fire({
+        title: 'Kamu tuh spesial banget!!',
+        html: `Kamu tuh kayak campuran unicorn, rainbow, dan es krim vanilla<br>
+               yang bikin dunia jadi lebih indah!<br><br>
+               <div style="display: flex; justify-content: center;">
+                 <img src="https://media.tenor.com/1fVbBfLqPfwAAAAi/hamster-happy.gif" width="120">
+               </div>
+               <br>
+               <p style="font-family: 'Dancing Script', cursive; font-size: 1.5rem; margin-top: 15px;">
+                 Jangan lupa bahagia selalu! ✨
+               </p>`,
+        confirmButtonText: 'Thank you!'
+      });
+      
+      playClickSound();
+      await customSwal.fire({
+        title: 'Dari Ario yang...',
+        html: `<div style="font-size: 1.1rem; margin: 15px 0;">
+                 <p>Selalu senyum kalau ingat kamu</p>
+                 <p style="font-family: 'Dancing Script', cursive; font-size: 1.6rem; margin-top: 20px;">❤️</p>
+               </div>
+               <div style="font-size: 1.1rem; margin: 15px 0;">
+                 <p>Yang suka bercanda tapi selalu peduli</p>
+                 <p style="font-family: 'Dancing Script', cursive; font-size: 1.6rem; margin-top: 20px;">❤️</p>
+               </div>
+               <img src="https://feeldreams.github.io/pandakuning.gif" width="100">`,
+        confirmButtonText: 'Sampai jumpa!',
+        background: 'linear-gradient(135deg, #fff8fa, #ffebf2)'
+      });
+      
+      // Final animation and restart option
+      playSuccessSound();
+      showConfetti();
+      
+      // Create a big heart animation
+      const bigHeart = document.createElement('div');
+      bigHeart.innerHTML = '❤️';
+      bigHeart.style.position = 'fixed';
+      bigHeart.style.top = '50%';
+      bigHeart.style.left = '50%';
+      bigHeart.style.transform = 'translate(-50%, -50%)';
+      bigHeart.style.fontSize = '10px';
+      bigHeart.style.opacity = '0';
+      bigHeart.style.zIndex = '1000';
+      document.body.appendChild(bigHeart);
+      
+      // Animate the big heart
+      gsap.to(bigHeart, {
+        fontSize: '200px',
+        opacity: 1,
+        duration: 1.5,
+        ease: 'back.out(1.7)'
+      });
+      
+      // After animation, ask if want to restart
+      setTimeout(async () => {
+        const { isConfirmed: wantRestart } = await customSwal.fire({
+          title: 'Mau ngobrol lagi?',
+          text: 'Aku selalu siap denger cerita kamu!',
+          showCancelButton: true,
+          confirmButtonText: 'Iya dong!',
+          cancelButtonText: 'Nggak dulu',
+          reverseButtons: true
+        });
+        
+        if (wantRestart) {
+          // Remove big heart
+          bigHeart.remove();
+          
+          // Reset everything
+          playClickSound();
+          startBtn.style.display = 'block';
+          gsap.to(startBtn, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.5
+          });
+        } else {
+          // Final goodbye
+          playClickSound();
+          await customSwal.fire({
+            title: 'Sampai jumpa lagi!',
+            html: '<img src="https://feeldreams.github.io/pandakuning.gif" width="120">',
+            confirmButtonText: 'Dadah~'
+          });
+          
+          // Fade out everything
+          gsap.to('.container', {opacity: 0, duration: 1});
+          gsap.to(bigHeart, {
+            opacity: 0,
+            duration: 1,
+            onComplete: () => bigHeart.remove()
+          });
+        }
+      }, 3000);
+    });
+    
+    // Easter egg - click anywhere to spawn hearts
+    document.addEventListener('click', function(e) {
+      if (e.target !== startBtn && e.target !== musicControl && !e.target.closest('.swal2-container')) {
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        for (let i = 0; i < 5; i++) {
+          const heart = document.createElement('div');
+          heart.innerHTML = '❤️';
+          heart.style.position = 'fixed';
+          heart.style.left = x + 'px';
+          heart.style.top = y + 'px';
+          heart.style.fontSize = '20px';
+          heart.style.pointerEvents = 'none';
+          heart.style.transform = 'translate(-50%, -50%)';
+          heart.style.opacity = '0';
+          heart.style.zIndex = '100';
+          document.body.appendChild(heart);
+          
+          // Animate heart
+          gsap.to(heart, {
+            y: y - 100 + Math.random() * 50 - 25,
+            x: x + Math.random() * 50 - 25,
+            opacity: 1,
+            scale: 1.5,
+            duration: 0.5
+          });
+          
+          gsap.to(heart, {
+            y: y - 200,
+            opacity: 0,
+            scale: 0.5,
+            duration: 1,
+            delay: 0.5,
+            onComplete: () => heart.remove()
+          });
+        }
+        
+        // Play small click sound
+        clickSound.currentTime = 0;
+        clickSound.volume = 0.3;
+        clickSound.play();
+      }
+    });
+    
+    // Easter egg - keyboard shortcut
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'm') {
+        musicControl.click();
+      }
+    });
+  </script>
+</body>
+</html>
